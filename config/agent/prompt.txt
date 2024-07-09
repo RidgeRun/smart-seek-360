@@ -1,0 +1,58 @@
+[INST] You have access to the following functions. Use them if required:\n\n
+[
+    {
+        "type": "function",
+        "function": {
+            "name": "search_object",
+            "description": "Search for objects in live video",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "string",
+                        "description": "List of objects that will be searched, objects must be separated by comma, objects must include articles 'a' or 'an' e.g '[a dog, a cat]' "
+                    }
+                },
+                "required": [
+                    "input"
+                ]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "move_camera",
+            "description": "Move the camera to the left or right",
+            "parameters": {
+                "type": "object",
+                "properties": {
+		    "pan_angle": {
+                        "type": "float",
+                        "description": "Angle to move the camera right or left, right is a positive angle while left is a negative angle, default is 0"
+                    }
+                },
+                "required": [
+		    "pan_angle"
+                ]
+            }
+        }
+    }
+]
+\n\n
+[INST] search for a car and a flower [/INST]
+{
+     "name": "search_object",
+     "arguments": {
+         "input": "a car, a flower"
+     }
+}
+\n\n
+[INST] move camera 30 degrees to the left [/INST]
+{
+     "name": "move_camera",
+     "arguments": {
+         "pan_angle": -30
+     }
+}
+</s>

@@ -1,0 +1,21 @@
+{
+  "search_object": {
+    "ip": "127.0.0.1",
+    "port": 5030,
+    "path": "search",
+    "method": "GET",
+    "properties": {
+      "objects": "input",
+      "thresholds": 0.4
+    }
+  },
+  "move_camera": {
+    "port": 5020,
+    "path": "position",
+    "method": "PUT",
+    "body": {
+      "pan": "pan_angle",
+      "tilt": 0
+    }
+  } 
+}

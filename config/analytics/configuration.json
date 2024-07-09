@@ -1,0 +1,14 @@
+{
+  "move_camera": {
+    "enable": 1,
+    "port": 5020,
+    "ip": "127.0.0.1",
+    "time_threshold": 10
+  },
+  "record": {
+    "enable": 0,
+    "port": 81,
+    "ip": "127.0.0.1",
+    "time_threshold": 20
+  }
+}

@@ -1,0 +1,98 @@
+#  Copyright (C) 2024 RidgeRun, LLC (http://www.ridgerun.com)
+#  All Rights Reserved.
+#
+#  The contents of this software are proprietary and confidential to RidgeRun,
+#  LLC.  No part of this program may be photocopied, reproduced or translated
+#  into another programming language without prior written consent of
+#  RidgeRun, LLC.  The user is free to modify the source code after obtaining
+#  a software license from RidgeRun.  All source code changes must be provided
+#  back to RidgeRun without any encumbrance.
+
+services:
+  detection:
+    image: ridgerun/detection-service
+    user: "0:0"
+    network_mode: "host"
+    runtime: nvidia
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    restart: always
+    container_name: detection-service
+    entrypoint: detection --horizontal-slices=1 --vertical-slices=1
+    deploy:
+      resources:
+        limits:
+          memory: 5600M
+      restart_policy:
+        condition: always
+
+  analytics:
+    image: ridgerun/analytics-service
+    user: "0:0"
+    network_mode: "host"
+    runtime: nvidia
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    restart: always
+    volumes:
+      - ./config/analytics/:/analytics-config/
+    container_name: analytics-service
+    entrypoint: analytics --config-file /analytics-config/configuration.json
+    depends_on:
+      detection:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          memory: 5600M
+      restart_policy:
+        condition: always
+
+  agent:
+    image: ridgerun/ai-agent-service
+    user: "0:0"
+    network_mode: "host"
+    runtime: nvidia
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    restart: always
+    volumes:
+      - ./config/agent/:/ai-agent-config/
+    container_name: agent-service
+    entrypoint: ai-agent --system_prompt ai-agent-config/prompt.txt --api_map ai-agent-config/api_mapping.json
+    depends_on:
+      detection:
+        condition: service_started
+    deploy:
+      restart_policy:
+        condition: always
+
+  ptz:
+    image: ridgerun/ptz-service
+    user: "0:0"
+    network_mode: "host"
+    runtime: nvidia
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "8192m"
+        max-file: "3"
+    restart: always
+    container_name: ptz-service
+    entrypoint: ptz --host 127.0.0.1 --port 5020
+    depends_on:
+      detection:
+        condition: service_started
+    deploy:
+      restart_policy:
+        condition: always
+  
